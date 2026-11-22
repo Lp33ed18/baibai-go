@@ -24,11 +24,13 @@ Microphone
 
 介面以語音為主、打字與選單為輔；導航以語音指引為主、螢幕地圖為輔。
 
+路線推薦以**預估步行時間**為主：用地形高度算出沿路的爬升與陡降，依 Tobler 步行速度公式換算時間（再依長輩行動狀況調慢），陡下坡另外扣分，沿途的休息點（座椅、公園、便利商店、廟宇）加分；走太久就改推薦搭公車。詳見 [docs/project-log.md](docs/project-log.md) 第 9 節。
+
 ## 檔案導覽
 
 | 檔案 | 內容 |
 |---|---|
-| [Midterm_Presentation.pptx](Midterm_Presentation.pptx) | 期中簡報（11 頁、英文，第 5 頁為介面示意動畫，放映模式才會動） |
+| [Midterm_Presentation.pptx](Midterm_Presentation.pptx) | 期中簡報（11 頁、英文，第 5 頁為介面示意動畫，放映模式才會動）。保留期中報告當時的版本，路線評分與動畫內容是舊版 |
 | [Midterm_Script.md](Midterm_Script.md) | 逐頁英文講稿，含時間與建議講者 |
 | [BaiBaiGo_mockup.html](BaiBaiGo_mockup.html) | 可點擊的介面示意（純前端、示範資料），用瀏覽器直接開啟 |
 | [assets/baibaigo_demo.gif](assets/baibaigo_demo.gif) | 介面示意動畫 |
@@ -58,7 +60,8 @@ python tools/make_gif.py
 
 - 期中報告已完成（2026-11-12）。
 - 介面示意與動畫是純前端，廟宇、距離、回覆都是示範資料，尚未接任何後端或真實地圖。
-- 期中後依助教建議，路線推薦加入坡度與大眾運輸，詳見 [docs/work-plan.md](docs/work-plan.md)。
+- 期中後依助教建議，路線推薦加入坡度與大眾運輸；因為沒有時間實地考察，坡度改用地形資料計算、階梯改為語音提醒不計分，評估改成室內錄華語語音再混入有授權的戶外噪音。詳見 [docs/work-plan.md](docs/work-plan.md) 與 [docs/project-log.md](docs/project-log.md)。
+- 評估用噪音素材只記錄來源與授權，音檔不放在這個 repo。
 
 ## 點子來源
 

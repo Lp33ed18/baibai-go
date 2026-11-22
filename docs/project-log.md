@@ -65,6 +65,8 @@ v3 的內容：
 
 具體分工與時程見 [work-plan.md](work-plan.md)。
 
+> 2026-11-22 更新：因為沒有時間實地踏查，坡度改用地形資料計算，「實地補標陡坡」取消；評分公式也重新設計，見第 9 節。
+
 ## 7. 待確認事項
 
 - USR 競賽的官方主題與評分項目（簡報 USR 頁是依中正 USR「共創長者幸福人生」方向撰寫，尚未對照報名公告）。
@@ -73,3 +75,118 @@ v3 的內容：
 - 坡度門檻：無障礙坡道常見 1:12（約 8%）可作參考，引用前要查證。
 - 民雄、新港公車班次與等車時間是否讓「搭公車」方案實用。
 - 民雄、新港地勢平坦，坡度在示範場域的影響可能不明顯，報告時可說明是為推廣到其他地區而設計。
+
+## 8. 評估用的噪音來源（2026-11-22）
+
+沒有時間實地錄音，評估改成：**在室內錄華語乾淨語音**（可請身邊長輩幫忙，事先說明用途），再**用程式混入有授權的戶外噪音**，依 0、5、10 dB 三種訊噪比混合，比較有／無前處理的辨識錯誤率。不做台語。
+
+不從網路影片節錄聲音：影片有版權、片中長輩沒有同意，而且影片裡語音和背景已混在一起，無法控制訊噪比，也沒有正確逐字稿可算錯誤率。
+
+### 採用的 9 段噪音
+
+| 情境 | 錄音 | 地點 | 長度 | 授權 |
+|---|---|---|---|---|
+| 廟會 | [Traditional temple festivals](https://archive.org/details/aporee_28340_32660) | 新北淡水中山北路 | 3:56 | CC BY 3.0 |
+| 廟會 | [Traditional temple festivals](https://archive.org/details/aporee_15743_18305) | 台北萬華華西街 | 1:22 | CC BY 3.0 |
+| 廟會 | [Traditional temple festivals](https://archive.org/details/aporee_23547_27379) | 高雄左營自由三路 | 2:32 | 公眾領域標示 |
+| 鞭炮 | [Firecrackers and Fireworks sound](https://archive.org/details/aporee_27232_32467) | 新北淡水大仁街 | 3:26 | CC BY 3.0 |
+| 鞭炮 | [Fireworks and firecrackers sound](https://archive.org/details/aporee_35597_40870) | 苗栗通霄白東里 | 4:16 | CC BY 3.0 |
+| 鞭炮 | [Firecrackers - Spring Festival - Beijing](https://freesound.org/people/Lenguaverde/sounds/381868/) | 中國北京 | 2:00 | CC0 |
+| 街道 | [Walking in the Street](https://archive.org/details/aporee_35601_40874) | 苗栗通霄白西里 | 6:38 | CC BY 3.0 |
+| 街道 | [Traffic In Hanoi](https://freesound.org/people/_Evile/sounds/854365/) | 越南河內（大量機車與喇叭，接近台灣街頭） | 2:59 | CC0 |
+| 街道 | [Walking on the road](https://archive.org/details/aporee_28295_32594) | 新北淡水中山北路 | 3:44 | CC BY 3.0 |
+
+合計約 70 MB。3 種情境 × 3 種訊噪比 = 9 種測試條件，每種條件有 3 段錄音可輪替。
+
+### 使用注意
+
+- 台灣環境聲音地圖的錄音是雙耳立體聲 MP3，使用前轉成單聲道、16 kHz。
+- 廟會錄音裡常有人聲交談，當背景噪音很真實，但也會讓辨識更難，報告時要說明。
+- 使用 CC BY 錄音時，報告與文件須標註：「錄音：吳燦政，台灣環境聲音地圖（radio aporee），CC BY 3.0」。CC0 與公眾領域標示的錄音不必標註，但仍建議列出來源。
+- 這些音檔不放進 GitHub repo，只記錄來源；需要時依連結下載。
+
+### 備用來源
+
+| 來源 | 內容 | 授權 |
+|---|---|---|
+| 台灣環境聲音地圖其他錄音 | [淡水大仁街廟會](https://archive.org/details/aporee_27593_32618)（13:52）、[淡水大仁街節慶](https://archive.org/details/aporee_27593_32466)、[萬華西園路 72 巷廟會](https://archive.org/details/aporee_15741_18303)、[台北貴陽街廟會](https://archive.org/details/aporee_15614_18170)、[北投廟會](https://archive.org/details/aporee_16122_18702)、台北廟會（[1](https://archive.org/details/aporee_15612_18168)、[2](https://archive.org/details/aporee_15603_18159)） | CC BY 3.0 |
+| Freesound | [台北廟宇環境音](https://freesound.org/people/Martin.Sadoux/sounds/415385/)、[彰化員林城市聲景](https://freesound.org/people/SonnySoundOfTaiwan/sounds/521220/)、[嘉義梅山夜雨](https://freesound.org/people/SonnySoundOfTaiwan/sounds/476645/)、[馬祖鞭炮](https://freesound.org/people/shawn0802/sounds/695867/)、[除夕煙火](https://freesound.org/people/lastraindrop/sounds/724997/)、[新山鞭炮](https://freesound.org/people/AppleCorey/sounds/689183/) | CC0 |
+| [DEMAND](https://zenodo.org/records/1227121) | 法國雷恩的路口車流、廣場、咖啡座 | CC BY-SA 3.0 |
+| [MUSAN](https://openslr.org/17) | 各種環境噪音 | 整體 CC BY 4.0，個別檔案以 LICENSE 為準 |
+
+### 確認過不能用
+
+- [台南忠義路二段廟會](https://archive.org/details/aporee_46424_52731)：CC BY-NC-ND，「禁止改作」，混入語音即屬改作。
+- [台北萬華西園路一段廟會](https://archive.org/details/aporee_42033_47916)：CC BY-NC-SA，限非商業用途，先不用。
+- ESC-50（CC BY-NC 3.0）、UrbanSound8K（CC BY-NC 4.0）：學校報告可用，但若競賽涉及商業用途有疑慮，不列為主要來源。
+
+## 9. 路線評分改用地形與步行時間（2026-11-22）
+
+### 為什麼改
+
+原本的評分要靠實地考察補標「有沒有階梯、有沒有座椅」，但組內沒有時間實地考察。改成只用網路上取得的資料：用地形高度算出爬升與陡降（助教的建議），取代階梯。
+
+### 新的評分公式
+
+`cost = 預估步行時間 + w × 陡下坡長度 − 休息點加分`
+
+1. **取高度剖面**：沿候選路線每隔約 20 公尺取一次海拔（配合地形資料的解析度，取得更密只會拿到重複的值）。
+2. **平滑**：原始高度有雜訊，先用移動平均或高斯濾波平滑，再算每一小段的坡度（高度差 ÷ 水平距離），避免算出不存在的陡坡。
+3. **估算步行時間**：每一小段用 Tobler 步行速度公式換算速度，再乘上長輩速度係數，算出走這段要幾分鐘，加總成整條路線的預估步行時間。
+4. **陡下坡懲罰**：坡度陡於門檻（暫定 −8%）的下坡路段，依長度另外加分數。對長輩來說，陡降的問題不只是慢，還有膝蓋負擔和跌倒風險，而 Tobler 只算時間。
+5. **休息點加分**：路線附近每有一個休息點就減一點分數。
+
+預估步行時間同時用在兩個地方：用語音告訴長輩「走路大約幾分鐘」，以及超過上限時改推薦搭公車。
+
+### Tobler 步行速度公式
+
+`速度（km/h）= 6 × e^(−3.5 × |坡度 + 0.05|)`
+
+出自 Waldo Tobler，*Three Presentations on Geographical Analysis and Modeling*（NCGIA Technical Report 93-1, 1993），依 Imhof（1950）的健行實測資料整理，GIS 中常用來估算步行時間（[說明](https://en.wikipedia.org/wiki/Tobler%27s_hiking_function)、[原始報告](https://escholarship.org/uc/item/05r820mz)）。
+
+| 路況 | 坡度 | 速度 | 走 100 公尺 |
+|---|---|---|---|
+| 微下坡（最快） | −5% | 6.0 km/h | 1.0 分鐘 |
+| 平地 | 0% | 5.0 km/h | 1.2 分鐘 |
+| 下坡 | −10% | 5.0 km/h | 1.2 分鐘 |
+| 上坡 | +10% | 3.6 km/h | 1.7 分鐘 |
+| 陡下坡 | −20% | 3.6 km/h | 1.7 分鐘 |
+| 陡上坡 | +20% | 2.5 km/h | 2.4 分鐘 |
+
+上坡越陡越慢；下坡一開始比平地快，太陡反而變慢；同樣坡度時上坡比下坡慢。這正好對應助教說的「爬升」與「陡降」。有研究指出它的速度高峰比實際更尖銳，但用來比較路線的相對難易已足夠。
+
+### 長輩速度係數（暫定）
+
+Tobler 的資料來自一般成人健行者，平地約 1.4 m/s，對長輩太快。參考文獻：
+
+- 70–79 歲健康長輩的舒適步行速度約 1.1–1.3 m/s（Bohannon & Andrews, 2011, *Physiotherapy* 的整合分析，[轉引數值](https://www.physicaltherapy.utoronto.ca/sites/default/files/assets/files/11walking-speed-age-and-sex-specific-normative-values-final.pdf)；男女數值在不同二手資料中有出入，引用前要查原文）。
+- 行動較不便的長輩可能低於 0.8 m/s。
+
+暫定兩個係數：
+
+| 使用者狀況 | 係數 | 平地速度 |
+|---|---|---|
+| 一般長輩 | 0.8 | 約 4.0 km/h（1.1 m/s） |
+| 拄拐杖或行動較慢 | 0.55 | 約 2.8 km/h（0.8 m/s） |
+
+這兩個數字之後要以原始文獻或長輩試用結果修正。
+
+### 階梯：不計分，只提醒
+
+OpenStreetMap 雖然可以標記階梯，但「階數」是選填欄位，鄉鎮地區多半沒標，連有沒有階梯都可能沒資料，不足以評分。所以階梯從公式拿掉；如果 OpenStreetMap 剛好標了路線上有階梯，就在語音裡提醒「前面有階梯，請小心」，不影響分數。
+
+### 休息點：加分並提示
+
+範圍從「座椅」放寬為**休息點**：座椅、公園、便利商店（台灣很普遍、多半有座位，在 OpenStreetMap 上標得較完整）與沿途廟宇。推薦時加分，導航時用語音告訴長輩「前面的便利商店可以坐下來休息」。
+
+### 限制（報告時要照實說）
+
+- **地形資料看不到階梯**：20–30 公尺解析度量的是地形起伏，廟門口或路邊的幾階台階不會出現在資料裡。這個改法是「用坡度取代階梯」，不是「用坡度偵測階梯」。
+- **民雄、新港很平**：高度差可能只有幾公尺，接近地形資料本身的誤差，多數路線的坡度可能都接近零。報告時可說明這是為推廣到有坡度的地區而設計，或另選一個有坡度的地點示範。
+- **平滑程度要拿捏**：平滑太少會出現假陡坡，太多會抹平真的短陡坡。
+
+### 資料來源（使用前要再確認）
+
+- 地形：內政部數值地形模型（DEM，開放資料，常見為 20 公尺解析度），或現成高程 API（如 OpenTopoData，約 30 公尺解析度的全球資料）。
+- 路網、休息點、階梯標記：OpenStreetMap。
+- 公車：交通部 TDX 或地圖服務的大眾運輸規劃。
