@@ -1,0 +1,10 @@
+# Not for upload: course page screenshot and the submitted PDF (personal info)
+*.pdf
+
+# PowerPoint / Office lock files
+~$*
+
+# Generated output and caches
+build/
+__pycache__/
+*.pyc

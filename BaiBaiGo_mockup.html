@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BaiBai Go 介面示意</title>
+<style>
+  :root {
+    --red: #9E2A2B; --red-dark: #7C1F20; --gold: #E09F3E; --ink: #2B1B17;
+    --tint: #F8EFE9; --gold-tint: #FBECD2; --gray: #5F5754; --line: #E9E4E1; --white: #fff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #EFEAE7; color: var(--ink);
+    font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif;
+    min-height: 100vh; display: flex; flex-wrap: wrap; gap: 32px;
+    align-items: center; justify-content: center; padding: 24px 16px;
+  }
+  button { font-family: inherit; cursor: pointer; border: 0; }
+  button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  /* ---------- phone ---------- */
+  .phone {
+    width: 380px; max-width: 100%; height: 760px; background: var(--white);
+    border: 10px solid var(--ink); border-radius: 44px; overflow: hidden;
+    display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(43,27,23,.25);
+  }
+  .bar { background: var(--red); color: var(--white); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .bar b { font-size: 22px; letter-spacing: 1px; }
+  .bar span { font-size: 14px; opacity: .85; }
+  .screen { flex: 1; display: none; flex-direction: column; padding: 22px 22px 18px; overflow-y: auto; }
+  .screen.on { display: flex; }
+  h1 { font-size: 30px; line-height: 1.35; margin: 6px 0 4px; }
+  .sub { font-size: 19px; color: var(--gray); margin: 0; }
+  .grow { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+
+  .mic {
+    width: 190px; height: 190px; border-radius: 50%; background: var(--red); color: var(--white);
+    display: grid; place-items: center; box-shadow: 0 10px 0 var(--red-dark), 0 18px 30px rgba(158,42,43,.35);
+    transition: transform .1s;
+  }
+  .mic:active { transform: translateY(6px); box-shadow: 0 4px 0 var(--red-dark); }
+  .mic svg { width: 86px; height: 86px; }
+  .mic.live { animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(158,42,43,.45); } 50% { box-shadow: 0 0 0 26px rgba(158,42,43,0); } }
+  .big-label { font-size: 26px; font-weight: 700; }
+
+  .minor { display: flex; gap: 10px; justify-content: center; }
+  .minor button { background: var(--tint); color: var(--gray); font-size: 16px; padding: 10px 16px; border-radius: 999px; }
+  .sheet { display: none; margin-top: 10px; background: var(--tint); border-radius: 16px; padding: 12px; }
+  .sheet.on { display: block; }
+  .sheet input { width: 100%; font: inherit; font-size: 18px; padding: 12px; border: 2px solid var(--line); border-radius: 12px; }
+  .sheet ul { margin: 0; padding: 0; list-style: none; }
+  .sheet li { font-size: 17px; padding: 9px 6px; color: var(--gray); display: flex; justify-content: space-between; }
+  .sheet li small { color: var(--gold); font-weight: 700; }
+
+  .bars { display: flex; gap: 6px; align-items: center; height: 46px; }
+  .bars i { width: 7px; height: 12px; background: var(--red); border-radius: 4px; animation: wave 1s ease-in-out infinite; }
+  .bars i:nth-child(2) { animation-delay: .1s } .bars i:nth-child(3) { animation-delay: .2s }
+  .bars i:nth-child(4) { animation-delay: .3s } .bars i:nth-child(5) { animation-delay: .4s }
+  .bars i:nth-child(6) { animation-delay: .5s } .bars i:nth-child(7) { animation-delay: .6s }
+  @keyframes wave { 0%,100% { height: 12px } 50% { height: 44px } }
+  .heard { font-size: 28px; font-weight: 700; min-height: 40px; text-align: center; }
+
+  .todo { width: 100%; list-style: none; padding: 0; margin: 0; }
+  .todo li { font-size: 21px; padding: 13px 14px; margin-bottom: 10px; border-radius: 14px; background: var(--tint); color: var(--gray); display: flex; gap: 12px; align-items: center; }
+  .todo li::before { content: ""; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--line); flex: none; }
+  .todo li.done { color: var(--ink); font-weight: 700; }
+  .todo li.done::before { background: var(--red); border-color: var(--red); }
+
+  .speaking { background: var(--ink); color: var(--white); border-radius: 18px; padding: 14px 16px; display: flex; gap: 14px; align-items: center; }
+  .speaking .bars { height: 34px; } .speaking .bars i { background: var(--gold); width: 5px; }
+  .speaking p { margin: 0; font-size: 19px; line-height: 1.45; }
+  .speaking small { color: var(--gold); font-weight: 700; font-size: 14px; display: block; }
+
+  .card { background: var(--tint); border-radius: 18px; padding: 16px; margin-top: 14px; }
+  .card h2 { margin: 0 0 4px; font-size: 28px; }
+  .card .meta { font-size: 20px; color: var(--gray); margin: 0 0 10px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tags span { background: var(--gold-tint); font-size: 16px; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
+  .route { margin-top: 12px; border-top: 2px dashed var(--line); padding-top: 10px; }
+  .route summary { font-size: 16px; color: var(--gray); cursor: pointer; }
+  .route svg { width: 100%; height: 86px; margin-top: 6px; }
+  .route ol { margin: 6px 0 0; padding-left: 22px; font-size: 16px; color: var(--gray); line-height: 1.7; }
+
+  .go { width: 100%; background: var(--red); color: var(--white); font-size: 28px; font-weight: 700; padding: 18px; border-radius: 18px; margin-top: 14px; box-shadow: 0 6px 0 var(--red-dark); }
+  .go:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--red-dark); }
+  .step-no { font-size: 17px; color: var(--gray); font-weight: 700; }
+  .turn { font-size: 40px; font-weight: 800; line-height: 1.3; text-align: center; margin: 0; }
+  .dist { font-size: 24px; color: var(--gray); margin: 0; }
+  .arrow-big { width: 120px; height: 120px; border-radius: 50%; background: var(--gold-tint); display: grid; place-items: center; }
+  .arrow-big svg { width: 70px; height: 70px; transition: transform .3s; }
+  /* guide screen: map background with overlays */
+  #s-guide { padding: 0; position: relative; overflow: hidden; }
+  .map { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #me { transition: transform .9s ease-in-out; }
+  .g-top { position: absolute; top: 12px; left: 12px; right: 12px; display: grid; gap: 8px; }
+  .turncard { background: var(--white); border-radius: 18px; padding: 12px 14px; display: flex; gap: 14px; align-items: center; box-shadow: 0 6px 18px rgba(43,27,23,.22); }
+  .turncard .arrow-big { width: 68px; height: 68px; flex: none; }
+  .turncard .arrow-big svg { width: 42px; height: 42px; }
+  .turncard .turn { font-size: 27px; text-align: left; }
+  .turncard .dist { font-size: 17px; }
+  .turncard .step-no { font-size: 14px; }
+  .g-top .speaking { padding: 10px 14px; box-shadow: 0 6px 18px rgba(43,27,23,.22); }
+  .g-top .speaking p { font-size: 16px; }
+  .g-top .speaking .bars { height: 26px; }
+  .g-bottom { position: absolute; left: 0; right: 0; bottom: 0; padding: 46px 18px 14px; background: linear-gradient(rgba(255,255,255,0), #fff 38%); }
+  .g-bottom .go { margin-top: 0; }
+  .g-bottom .minor { margin-top: 10px; }
+  .ok { width: 130px; height: 130px; border-radius: 50%; background: var(--red); display: grid; place-items: center; }
+  .ok svg { width: 74px; height: 74px; }
+  .family { background: var(--gold-tint); border-radius: 16px; padding: 14px 16px; font-size: 19px; width: 100%; }
+  .family b { display: block; font-size: 15px; color: var(--gray); }
+
+  /* ---------- side panel ---------- */
+  .side { width: 340px; max-width: 100%; }
+  .side h3 { font: 700 20px Cambria, Georgia, serif; color: var(--red); margin: 0 0 10px; }
+  .side section { background: var(--white); border-radius: 18px; padding: 18px; margin-bottom: 18px; }
+  .flow, .pipe { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .flow li, .pipe li { padding: 10px 14px; border-radius: 12px; background: var(--tint); font: 600 16px Calibri, "Segoe UI", sans-serif; color: var(--gray); }
+  .flow li.on { background: var(--red); color: var(--white); }
+  .pipe li.ours { border: 2px solid var(--red); }
+  .pipe li.on { background: var(--ink); color: var(--white); }
+  .pipe li.ours.on { background: var(--red); }
+  .note { font: 14px Calibri, "Segoe UI", sans-serif; color: var(--gray); line-height: 1.5; margin: 0; }
+  .reset { background: var(--ink); color: var(--white); font-size: 15px; padding: 10px 16px; border-radius: 999px; margin-top: 12px; }
+  @media (prefers-reduced-motion: reduce) { .bars i, .mic.live { animation: none; } }
+</style>
+</head>
+<body>
+
+<div class="phone" aria-label="BaiBai Go 手機介面示意">
+  <div class="bar"><b>拜拜 Go</b><span>示意畫面</span></div>
+
+  <!-- 1 首頁 -->
+  <div class="screen on" id="s-home">
+    <h1>今天想去哪裡拜拜？</h1>
+    <p class="sub">按一下大按鈕，用說的就可以</p>
+    <div class="grow">
+      <button class="mic" id="micBtn" aria-label="按一下開始說話">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+      </button>
+      <div class="big-label">按一下，開始說話</div>
+    </div>
+    <div class="minor">
+      <button id="typeBtn">改用打字</button>
+      <button id="menuBtn">選單</button>
+    </div>
+    <div class="sheet" id="typeSheet"><input id="typeInput" placeholder="輸入後按 Enter，例如：我想去拜拜" aria-label="打字輸入"></div>
+    <div class="sheet" id="menuSheet"><ul>
+      <li>常去的廟 <small>之後擴充</small></li>
+      <li>家人聯絡設定 <small>之後擴充</small></li>
+      <li>廟宇活動 <small>之後擴充</small></li>
+    </ul></div>
+  </div>
+
+  <!-- 2 聆聽 -->
+  <div class="screen" id="s-listen">
+    <h1>我在聽，請說</h1>
+    <p class="sub">說完會自動幫您處理</p>
+    <div class="grow">
+      <div class="mic live" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+      </div>
+      <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="heard" id="heard" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- 3 處理中 -->
+  <div class="screen" id="s-work">
+    <h1>正在幫您找路線</h1>
+    <p class="sub">請稍等一下</p>
+    <div class="grow">
+      <ul class="todo" id="todo">
+        <li>把聲音處理乾淨</li>
+        <li>聽懂您說的話</li>
+        <li>找適合的廟和路線</li>
+        <li>準備唸給您聽</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4 推薦 -->
+  <div class="screen" id="s-rec">
+    <div class="speaking">
+      <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <p><small>正在唸給您聽</small><span id="recSay"></span></p>
+    </div>
+    <div class="card">
+      <h2 id="tName"></h2>
+      <p class="meta" id="tMeta"></p>
+      <div class="tags" id="tTags"></div>
+      <details class="route">
+        <summary>看路線圖（次要）</summary>
+        <svg viewBox="0 0 320 86" role="img" aria-label="簡化路線圖">
+          <path d="M20 66 H120 V26 H230 V52 H300" fill="none" stroke="#9E2A2B" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="20" cy="66" r="8" fill="#2B1B17"/><circle cx="300" cy="52" r="9" fill="#E09F3E"/>
+          <rect x="165" y="14" width="22" height="8" rx="3" fill="#5F5754"/>
+          <text x="8" y="84" font-size="12" fill="#5F5754">您的位置</text><text x="272" y="76" font-size="12" fill="#5F5754">廟</text>
+          <text x="158" y="10" font-size="11" fill="#5F5754">座椅</text>
+        </svg>
+      </details>
+    </div>
+    <div class="grow" style="justify-content:flex-end; gap:10px">
+      <button class="go" id="goBtn">出發</button>
+      <div class="minor">
+        <button id="againBtn">再聽一次</button>
+        <button id="otherBtn">換一間</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 導航 -->
+  <div class="screen" id="s-guide">
+    <svg class="map" viewBox="0 0 360 640" preserveAspectRatio="xMidYMid slice" role="img" aria-label="示意地圖：目前位置與到廟的路線">
+      <rect width="360" height="640" fill="#EEE8DF"/>
+      <!-- blocks -->
+      <g fill="#E3DBD0">
+        <rect x="112" y="198" width="90" height="84" rx="6"/><rect x="238" y="198" width="64" height="40" rx="6"/>
+        <rect x="0" y="198" width="68" height="84" rx="6"/><rect x="0" y="318" width="68" height="84" rx="6"/>
+        <rect x="238" y="318" width="64" height="84" rx="6"/><rect x="112" y="438" width="90" height="120" rx="6"/>
+        <rect x="238" y="438" width="64" height="120" rx="6"/><rect x="0" y="438" width="68" height="120" rx="6"/>
+        <rect x="112" y="60" width="90" height="102" rx="6"/><rect x="238" y="60" width="64" height="102" rx="6"/>
+        <rect x="338" y="198" width="22" height="204" rx="6"/>
+      </g>
+      <rect x="112" y="318" width="90" height="84" rx="10" fill="#CFE3C4"/>
+      <text x="157" y="365" font-size="12" fill="#5B7A4C" text-anchor="middle">公園</text>
+      <!-- roads -->
+      <g stroke="#FFFFFF" stroke-linecap="round">
+        <path d="M90 0V640" stroke-width="26"/><path d="M0 300H360" stroke-width="26"/>
+        <path d="M0 180H360M0 420H360M220 0V640M320 0V640" stroke-width="16"/>
+      </g>
+      <!-- route -->
+      <path d="M90 478V300H280" fill="none" stroke="#9E2A2B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- bench -->
+      <g transform="translate(150 276)"><circle r="11" fill="#FFFFFF" stroke="#5F5754" stroke-width="2"/><path d="M-5 -1H5M-5 2H5M-4 2V5M4 2V5" stroke="#5F5754" stroke-width="2" stroke-linecap="round"/></g>
+      <text x="150" y="258" font-size="12" fill="#5F5754" text-anchor="middle">座椅</text>
+      <!-- temple -->
+      <rect x="244" y="244" width="52" height="36" rx="6" fill="#FBECD2" stroke="#E09F3E" stroke-width="2"/>
+      <g transform="translate(280 252)"><path d="M0 -26a13 13 0 0 1 13 13c0 10-13 23-13 23s-13-13-13-23a13 13 0 0 1 13-13z" fill="#E09F3E" stroke="#FFFFFF" stroke-width="2"/><circle cy="-13" r="5" fill="#FFFFFF"/></g>
+      <rect x="226" y="204" width="88" height="20" rx="10" fill="#2B1B17"/>
+      <text id="mapTemple" x="270" y="218" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">新港奉天宮</text>
+      <!-- current position -->
+      <g id="me" style="transform: translate(90px, 470px) rotate(0deg)">
+        <circle r="20" fill="#2F6FED" opacity=".2"/>
+        <path d="M0 -19L8 -7H-8Z" fill="#2F6FED"/>
+        <circle r="9" fill="#2F6FED" stroke="#FFFFFF" stroke-width="3"/>
+      </g>
+    </svg>
+    <div class="g-top">
+      <div class="turncard">
+        <div class="arrow-big"><svg id="gArrow" viewBox="0 0 24 24" fill="none" stroke="#9E2A2B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5M5 12l7-7 7 7"/></svg></div>
+        <div>
+          <div class="step-no" id="gNo"></div>
+          <p class="turn" id="gTurn"></p>
+          <p class="dist" id="gDist"></p>
+        </div>
+      </div>
+      <div class="speaking">
+        <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <p><small>語音指引中</small><span id="gSay"></span></p>
+      </div>
+    </div>
+    <div class="g-bottom">
+      <button class="go" id="nextBtn">下一步</button>
+      <div class="minor"><button id="repeatBtn">再聽一次</button></div>
+    </div>
+  </div>
+
+  <!-- 6 抵達 -->
+  <div class="screen" id="s-done">
+    <div class="grow">
+      <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+      <h1 style="text-align:center">到了！<br><span id="dName"></span></h1>
+      <div class="family"><b>平安回報</b>已經傳訊息告訴家人：「阿嬤已經平安到廟裡了。」</div>
+    </div>
+    <button class="go" id="homeBtn">回首頁</button>
+  </div>
+</div>
+
+<aside class="side">
+  <section>
+    <h3>User flow</h3>
+    <ol class="flow" id="flow"><li>1 · Ask</li><li>2 · Recommend</li><li>3 · Guide</li><li>4 · Arrive safely</li></ol>
+  </section>
+  <section>
+    <h3>System pipeline</h3>
+    <ol class="pipe" id="pipe">
+      <li>Microphone</li><li class="ours">Input pre-processing</li><li>Speech-to-Text API</li>
+      <li>App logic: intent and route</li><li>Text-to-Speech API</li><li class="ours">Output processing</li><li>Speaker</li>
+    </ol>
+  </section>
+  <section>
+    <p class="note">Front-end mockup only. The temple, distances and replies are demo data, and no real recognition or routing happens. Red-outlined steps are the parts our team implements.</p>
+    <button class="reset" id="resetBtn">Restart demo</button>
+  </section>
+</aside>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var temples = [
+    { name: "新港奉天宮", meta: "走路約 8 分鐘 · 550 公尺", tags: ["樓梯少", "途中有 2 處座椅", "有遮蔭"],
+      say: "推薦您去新港奉天宮，走路大約八分鐘，路上樓梯很少，還有兩個地方可以坐下來休息。" },
+    { name: "大興宮", meta: "走路約 12 分鐘 · 800 公尺", tags: ["沒有樓梯", "途中有 1 處座椅", "公車可到"],
+      say: "也可以去大興宮，走路大約十二分鐘，整段路都沒有樓梯。" }
+  ];
+  var steps = [
+    { turn: "直直往前走", dist: "大約 150 公尺", rot: 0, say: "請直直往前走，大約一百五十公尺。", x: 90, y: 470, head: 0 },
+    { turn: "前面路口右轉", dist: "轉彎後有座椅可以休息", rot: 90, say: "前面路口請右轉，轉過去有椅子可以休息。", x: 90, y: 326, head: 0 },
+    { turn: "再往前走", dist: "大約 200 公尺", rot: 0, say: "再往前走，大約兩百公尺。", x: 150, y: 300, head: 90 },
+    { turn: "廟在您的左手邊", dist: "從側門進去沒有樓梯", rot: -90, say: "廟就在您的左手邊，從側門進去沒有樓梯。", x: 268, y: 300, head: 90 }
+  ];
+  var t = 0, g = 0, timers = [];
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function clearAll() { timers.forEach(clearTimeout); timers = []; try { speechSynthesis.cancel(); } catch (e) {} }
+  function say(text) {
+    try {
+      if (!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "zh-TW"; u.rate = 0.85;
+      speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  function mark(listId, upTo, exact) {
+    Array.prototype.forEach.call($(listId).children, function (li, i) {
+      li.classList.toggle("on", exact ? i === upTo : i <= upTo && upTo >= 0);
+    });
+  }
+  function show(id, flowStep) {
+    Array.prototype.forEach.call(document.querySelectorAll(".screen"), function (s) { s.classList.toggle("on", s.id === id); });
+    mark("flow", flowStep, true);
+  }
+
+  function home() {
+    clearAll(); t = 0; g = 0;
+    $("typeSheet").classList.remove("on"); $("menuSheet").classList.remove("on"); $("typeInput").value = "";
+    mark("pipe", -1); show("s-home", -1);
+  }
+  function listen() {
+    clearAll(); $("heard").textContent = ""; show("s-listen", 0); mark("pipe", 0);
+    later(function () { $("heard").textContent = "「我想去拜拜」"; }, 1800);
+    later(work, 3000);
+  }
+  function work() {
+    show("s-work", 0);
+    var items = $("todo").children, pipeAt = [1, 2, 3, 4];
+    Array.prototype.forEach.call(items, function (li) { li.classList.remove("done"); });
+    Array.prototype.forEach.call(items, function (li, i) {
+      later(function () { li.classList.add("done"); mark("pipe", pipeAt[i]); }, 700 * (i + 1));
+    });
+    later(recommend, 700 * 4 + 600);
+  }
+  function recommend() {
+    var x = temples[t];
+    $("tName").textContent = x.name; $("tMeta").textContent = x.meta; $("recSay").textContent = x.say;
+    $("tTags").innerHTML = "";
+    x.tags.forEach(function (tag) { var s = document.createElement("span"); s.textContent = tag; $("tTags").appendChild(s); });
+    show("s-rec", 1); mark("pipe", 6); say(x.say);
+  }
+  function guide() {
+    var s = steps[g];
+    $("gNo").textContent = "第 " + (g + 1) + " 步，共 " + steps.length + " 步";
+    $("gTurn").textContent = s.turn; $("gDist").textContent = s.dist; $("gSay").textContent = s.say;
+    $("gArrow").style.transform = "rotate(" + s.rot + "deg)";
+    $("me").style.transform = "translate(" + s.x + "px, " + s.y + "px) rotate(" + s.head + "deg)";
+    $("mapTemple").textContent = temples[t].name;
+    $("nextBtn").textContent = g === steps.length - 1 ? "我到了" : "下一步";
+    show("s-guide", 2); mark("pipe", 6); say(s.say);
+  }
+  function done() {
+    $("dName").textContent = temples[t].name;
+    show("s-done", 3); say("到了，已經幫您告訴家人，您平安到廟裡了。");
+  }
+
+  $("micBtn").onclick = listen;
+  $("typeBtn").onclick = function () { $("menuSheet").classList.remove("on"); $("typeSheet").classList.toggle("on"); $("typeInput").focus(); };
+  $("menuBtn").onclick = function () { $("typeSheet").classList.remove("on"); $("menuSheet").classList.toggle("on"); };
+  $("typeInput").onkeydown = function (e) { if (e.key === "Enter" && this.value.trim()) { clearAll(); mark("pipe", -1); work(); } };
+  $("goBtn").onclick = function () { g = 0; guide(); };
+  $("againBtn").onclick = function () { say(temples[t].say); };
+  $("otherBtn").onclick = function () { t = (t + 1) % temples.length; recommend(); };
+  $("nextBtn").onclick = function () { if (g < steps.length - 1) { g++; guide(); } else { done(); } };
+  $("repeatBtn").onclick = function () { say(steps[g].say); };
+  $("homeBtn").onclick = home;
+  $("resetBtn").onclick = home;
+})();
+</script>
+</body>
+</html>
